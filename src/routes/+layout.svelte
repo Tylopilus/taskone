@@ -16,5 +16,7 @@
 		margin-inline: auto;
 		margin-block-start: var(--size-10);
 		padding-inline: var(--size-8);
+		flex-direction: column;
+		gap: var(--size-7);
 	}
 </style>
