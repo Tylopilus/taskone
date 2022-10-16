@@ -1,13 +1,12 @@
 <script lang="ts">
-	import type { Task } from 'src/routes/+page.svelte';
+	import AddTask from './AddTask.svelte';
+	import type { Task } from './store';
 	import TaskItem from './Task.svelte';
 
 	export let title: string;
 	export let tasks: Task[];
 	export let current = false;
 	const bgColor = current ? '--gray-7' : '--gray-8';
-
-	console.log(tasks);
 </script>
 
 <section style="--bgColor: var({bgColor})">
@@ -20,6 +19,9 @@
 	{#each tasks as task}
 		<TaskItem {task} />
 	{/each}
+	{#if !current}
+		<AddTask />
+	{/if}
 </section>
 
 <style>

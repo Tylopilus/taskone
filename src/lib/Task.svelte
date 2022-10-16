@@ -1,7 +1,9 @@
 <script lang="ts">
-	import type { Task } from 'src/routes/+page.svelte';
+	import type { Task } from './store';
+
 	export let task: Task;
-	const setTime = new Date(task.duration * 1000);
+	const time = new Date(task.duration * 1000);
+	const minutes = time.getMinutes() + (time.getHours() - 1) * 60;
 </script>
 
 <div class="task">
@@ -9,7 +11,7 @@
 		<input type="checkbox" name="checkbox" id="checkbox" checked={task.done} />
 		<label for="checkbox">{task.title}</label>
 	</div>
-	<span>{`${setTime.getMinutes() + (setTime.getHours() - 1) * 60}m`}</span>
+	<span>{`${minutes}m`}</span>
 </div>
 
 <style>
