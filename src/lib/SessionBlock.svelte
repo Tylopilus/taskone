@@ -1,7 +1,13 @@
 <script lang="ts">
+	import type { Task } from 'src/routes/+page.svelte';
+	import TaskItem from './Task.svelte';
+
 	export let title: string;
+	export let tasks: Task[];
 	export let current = false;
 	const bgColor = current ? '--gray-7' : '--gray-8';
+
+	console.log(tasks);
 </script>
 
 <section style="--bgColor: var({bgColor})">
@@ -11,13 +17,9 @@
 			<span>0h 32m</span>
 		{/if}
 	</div>
-	<div class="task">
-		<div>
-			<input type="checkbox" name="checkbox" id="checkbox" />
-			<label for="checkbox">Get Stuff done</label>
-		</div>
-		<span>25m</span>
-	</div>
+	{#each tasks as task}
+		<TaskItem {task} />
+	{/each}
 </section>
 
 <style>
@@ -39,26 +41,5 @@
 		justify-content: space-between;
 		padding-inline: var(--size-3);
 		color: var(--gray-1);
-	}
-	.task {
-		background-color: var(--gray-9);
-		border-radius: var(--radius-3);
-		padding-inline: var(--size-7);
-		padding-block: var(--size-4);
-		display: flex;
-		justify-content: space-between;
-	}
-	.task > div {
-		display: flex;
-		align-items: center;
-	}
-	.task > div > label {
-		margin-inline-start: var(--size-3);
-	}
-	.task > span {
-		color: var(--gray-9);
-		background-color: var(--gray-1);
-		border-radius: var(--radius-round);
-		padding-inline: var(--size-3);
 	}
 </style>
