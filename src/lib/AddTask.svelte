@@ -1,6 +1,8 @@
 <script lang="ts">
-	let inputValue: string;
+	import cuid from 'cuid';
 	import { store, type Tasks } from './store';
+
+	let inputValue: string;
 
 	const submitHandler = (
 		e: SubmitEvent & {
@@ -12,7 +14,7 @@
 			nextSession: [
 				...state.nextSession,
 				{
-					id: state.nextSession.length.toString(),
+					id: cuid(),
 					title: inputValue,
 					done: false,
 					duration: 0

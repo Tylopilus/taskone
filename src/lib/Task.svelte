@@ -4,12 +4,27 @@
 	export let task: Task;
 	const time = new Date(task.duration * 1000);
 	const minutes = time.getMinutes() + (time.getHours() - 1) * 60;
+
+	const checkHandler = (
+		e: Event & {
+			currentTarget: EventTarget & HTMLInputElement;
+		}
+	) => {
+		// TODO: Implement checked element to remove from store
+		// remove checked element from store
+	};
 </script>
 
 <div class="task">
 	<div>
-		<input type="checkbox" name="checkbox" id="checkbox" checked={task.done} />
-		<label for="checkbox">{task.title}</label>
+		<input
+			type="checkbox"
+			name="checkbox"
+			id={task.id}
+			checked={task.done}
+			on:change={(e) => checkHandler(e)}
+		/>
+		<label for={task.id}>{task.title}</label>
 	</div>
 	<span>{`${minutes}m`}</span>
 </div>
