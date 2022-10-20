@@ -11,11 +11,10 @@
 
 	const buttonHandler = () => {
 		store.update((state) => {
-			// const newTasks = state.nextSession.filter((task) => !task.done);
 			return {
 				...state,
-				currentSession: [...state.currentSession, ...state.nextSession],
-				nextSession: state.nextSession.filter((task) => task.done)
+				nextSession: [...state.nextSession.filter((task) => task.done)],
+				currentSession: [...state.currentSession, ...state.nextSession]
 			};
 		});
 	};

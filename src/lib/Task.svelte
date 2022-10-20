@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Task } from './store';
-
+	import { store } from './store';
 	export let task: Task;
 	const time = new Date(task.duration * 1000);
 	const minutes = time.getMinutes() + (time.getHours() - 1) * 60;
@@ -10,8 +10,16 @@
 			currentTarget: EventTarget & HTMLInputElement;
 		}
 	) => {
-		// TODO: Implement checked element to remove from store
-		// remove checked element from store
+		if (e.currentTarget.checked) {
+			store.update((state) => {
+				e.currentTarget.checked = false;
+				return {
+					...state,
+					currentSession: state.currentSession.filter((task) => task.id !== e.currentTarget.id),
+					nextSession: state.nextSession.filter((task) => task.id !== e.currentTarget.id)
+				};
+			});
+		}
 	};
 </script>
 
@@ -22,7 +30,7 @@
 			name="checkbox"
 			id={task.id}
 			checked={task.done}
-			on:change={(e) => checkHandler(e)}
+			on:change|preventDefault={checkHandler}
 		/>
 		<label for={task.id}>{task.title}</label>
 	</div>
