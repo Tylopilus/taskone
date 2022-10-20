@@ -1,6 +1,6 @@
 <script lang="ts">
 	import AddTask from './AddTask.svelte';
-	import type { Task } from './store';
+	import type { Task, Tasks } from './store';
 	import { store } from './store';
 	import TaskItem from './Task.svelte';
 
@@ -10,12 +10,22 @@
 	const bgColor = current ? '--gray-7' : '--gray-8';
 
 	const buttonHandler = () => {
-		store.update((state) => {
-			return {
+		store.update((state: Tasks) => {
+			const newState = {
 				...state,
 				nextSession: [...state.nextSession.filter((task) => task.done)],
-				currentSession: [...state.currentSession, ...state.nextSession]
+				currentSession: [
+					...state.currentSession,
+					...state.nextSession.map((task): Task => {
+						return {
+							...task,
+							status: 'inProgress'
+						};
+					})
+				]
 			};
+			console.log(newState);
+			return newState;
 		});
 	};
 </script>

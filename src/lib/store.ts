@@ -4,6 +4,8 @@ export type Task = {
 	title: string;
 	duration: number;
 	done: boolean;
+	timeWorkedOn: number;
+	status: 'backlog' | 'inProgress' | 'paused';
 };
 export type Tasks = {
 	currentSession: Task[];

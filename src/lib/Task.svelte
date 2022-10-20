@@ -11,15 +11,17 @@
 		}
 	) => {
 		if (e.currentTarget.checked) {
+			task.done = true;
 			store.update((state) => {
-				e.currentTarget.checked = false;
 				return {
 					...state,
-					currentSession: state.currentSession.filter((task) => task.id !== e.currentTarget.id),
 					nextSession: state.nextSession.filter((task) => task.id !== e.currentTarget.id)
 				};
 			});
+		} else {
+			task.done = false;
 		}
+		console.log($store);
 	};
 </script>
 
@@ -27,9 +29,9 @@
 	<div>
 		<input
 			type="checkbox"
+			checked={task.done}
 			name="checkbox"
 			id={task.id}
-			checked={task.done}
 			on:change|preventDefault={checkHandler}
 		/>
 		<label for={task.id}>{task.title}</label>
@@ -62,5 +64,8 @@
 		font-size: var(--font-size-2);
 		line-height: var(--font-lineheight-3);
 		padding-inline: var(--size-3);
+	}
+	input:checked + label {
+		text-decoration: line-through;
 	}
 </style>

@@ -17,7 +17,9 @@
 					id: cuid(),
 					title: inputValue,
 					done: false,
-					duration: 0
+					duration: 0,
+					timeWorkedOn: 0,
+					status: 'backlog'
 				}
 			]
 		}));
