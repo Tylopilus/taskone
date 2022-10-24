@@ -13,15 +13,15 @@
 		taskStore.update((state: Tasks) => {
 			const newState = {
 				...state,
-				nextSession: [...state.nextSession.filter((task) => task.done)],
+				nextSession: [...state.nextSession.filter((task) => task.status !== 'marked')],
 				currentSession: [
 					...state.currentSession,
-					...state.nextSession.map((task): Task => {
-						return {
-							...task,
-							status: 'inProgress'
-						};
-					})
+					...state.nextSession
+						.filter((task) => task.status === 'marked')
+						.map((task) => {
+							task.status = 'inProgress';
+							return task;
+						})
 				]
 			};
 			return newState;
@@ -32,7 +32,7 @@
 		taskStore.update((state: Tasks) => {
 			return {
 				...state,
-				currentSession: state.currentSession.filter((task) => !task.done)
+				currentSession: state.currentSession.filter((task) => task.status !== 'done')
 			};
 		});
 	};
@@ -51,7 +51,7 @@
 			<button on:click={moveToCurrentHandler}>move up ↑</button>
 		{/if}
 	</div>
-	{#each tasks as task}
+	{#each tasks as task (task.id)}
 		<TaskItem {task} />
 	{/each}
 	{#if !current}

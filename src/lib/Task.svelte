@@ -16,16 +16,15 @@
 		}
 	) => {
 		if (e.currentTarget.checked) {
-			task.done = true;
-			taskStore.update((state) => {
-				return {
-					...state,
-					nextSession: state.nextSession.filter((task) => task.id !== e.currentTarget.id)
-				};
-			});
-		} else {
-			task.done = false;
+			switch (task.status) {
+				case 'inProgress':
+					task.status = 'done';
+					break;
+				default:
+					task.status = 'marked';
+			}
 		}
+		updateTask(task.id, task);
 	};
 
 	const blurHandler = (
@@ -42,9 +41,10 @@
 	<div>
 		<input
 			type="checkbox"
-			checked={task.done}
+			checked={task.status === 'done'}
 			name="checkbox"
 			id={task.id}
+			data-done={task.status}
 			on:change|preventDefault={checkHandler}
 		/>
 		<label for={task.id}>{task.title}</label>
@@ -86,7 +86,7 @@
 		line-height: var(--font-lineheight-4);
 		padding-inline: var(--size-3);
 	}
-	input:checked + label {
+	input:checked[data-done='done'] + label {
 		text-decoration: line-through;
 	}
 </style>
