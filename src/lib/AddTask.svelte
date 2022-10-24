@@ -1,6 +1,6 @@
 <script lang="ts">
 	import cuid from 'cuid';
-	import { addTask, store, type Tasks } from './store';
+	import { addTask } from './store';
 
 	let inputValue: string;
 

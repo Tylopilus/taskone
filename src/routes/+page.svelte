@@ -1,18 +1,16 @@
 <script lang="ts">
-	import { browser } from '$app/environment';
-
 	import SessionBlock from '$lib/SessionBlock.svelte';
-	import { store } from '$lib/store';
+	import { taskStore } from '$lib/store';
 	import '../app.postcss';
 </script>
 
 <svelte:head>
-	<title>Home</title>
-	<meta name="description" content="Svelte demo app" />
+	<title>TaskOne | Track your tasks with ease</title>
+	<meta name="description" content="TaskOne | Track your tasks with ease" />
 </svelte:head>
 <div>
-	<SessionBlock title="Current Session" current tasks={$store.currentSession} />
-	<SessionBlock title="Next Session" tasks={$store.nextSession} />
+	<SessionBlock title="Current Session" current tasks={$taskStore.currentSession} />
+	<SessionBlock title="Next Session" tasks={$taskStore.nextSession} />
 </div>
 
 <style>

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { updateTask, type Task, type Tasks } from './store';
-	import { store } from './store';
+	import { taskStore } from './store';
 
 	export let task: Task;
 	let editable = false;
@@ -17,7 +17,7 @@
 	) => {
 		if (e.currentTarget.checked) {
 			task.done = true;
-			store.update((state) => {
+			taskStore.update((state) => {
 				return {
 					...state,
 					nextSession: state.nextSession.filter((task) => task.id !== e.currentTarget.id)

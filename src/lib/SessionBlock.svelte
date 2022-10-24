@@ -1,7 +1,7 @@
 <script lang="ts">
 	import AddTask from './AddTask.svelte';
 	import type { Task, Tasks } from './store';
-	import { store } from './store';
+	import { taskStore } from './store';
 	import TaskItem from './Task.svelte';
 
 	export let title: string;
@@ -10,7 +10,7 @@
 	const bgColor = current ? '--gray-7' : '--gray-8';
 
 	const moveToCurrentHandler = () => {
-		store.update((state: Tasks) => {
+		taskStore.update((state: Tasks) => {
 			const newState = {
 				...state,
 				nextSession: [...state.nextSession.filter((task) => task.done)],
@@ -29,7 +29,7 @@
 	};
 
 	const clearCurrentHandler = () => {
-		store.update((state: Tasks) => {
+		taskStore.update((state: Tasks) => {
 			return {
 				...state,
 				currentSession: state.currentSession.filter((task) => !task.done)
