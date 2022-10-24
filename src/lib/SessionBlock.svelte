@@ -7,6 +7,16 @@
 	export let title: string;
 	export let tasks: Task[];
 	export let current = false;
+	export let time: number = 0;
+
+	$: minutes = () => {
+		const t = new Date(time * 1000 || 0);
+		return t.getMinutes() + (t.getHours() - 1) * 60;
+	};
+	$: hours = () => {
+		const t = new Date(time * 1000 || 0);
+		return t.getHours() - 1;
+	};
 	const bgColor = current ? '--gray-7' : '--gray-8';
 
 	const moveToCurrentHandler = () => {
@@ -44,7 +54,7 @@
 		{#if current}
 			<div>
 				<button on:click={clearCurrentHandler}>clear</button>
-				<span>0h 32m</span>
+				<span>{`${hours()}h ${minutes()}m`}</span>
 			</div>
 		{/if}
 		{#if !current}
