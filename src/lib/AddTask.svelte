@@ -1,6 +1,6 @@
 <script lang="ts">
 	import cuid from 'cuid';
-	import { store, type Tasks } from './store';
+	import { addTask, store, type Tasks } from './store';
 
 	let inputValue: string;
 
@@ -9,20 +9,14 @@
 			currentTarget: EventTarget & HTMLFormElement;
 		}
 	) => {
-		store.update((state: Tasks) => ({
-			...state,
-			nextSession: [
-				...state.nextSession,
-				{
-					id: cuid(),
-					title: inputValue,
-					done: false,
-					duration: 25 * 60,
-					timeWorkedOn: 0,
-					status: 'backlog'
-				}
-			]
-		}));
+		addTask({
+			id: cuid(),
+			title: inputValue,
+			done: false,
+			duration: 25 * 60,
+			timeWorkedOn: 0,
+			status: 'backlog'
+		});
 		inputValue = '';
 	};
 </script>

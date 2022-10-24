@@ -1,17 +1,15 @@
 <script lang="ts">
-	import type { Task, Tasks } from './store';
+	import { updateTask, type Task, type Tasks } from './store';
 	import { store } from './store';
+
 	export let task: Task;
-	// const time = new Date(task.duration * 1000);
-	$: time = new Date(
-		(
-			$store.nextSession.find((storeTask) => storeTask.id === task.id) ||
-			$store.currentSession.find((storeTask) => storeTask.id === task.id)
-		)?.duration! * 1000 || 0
-	);
-	$: minutes = time.getMinutes() + (time.getHours() - 1) * 60;
-	// const minutes = time.getMinutes() + (time.getHours() - 1) * 60;
 	let editable = false;
+
+	$: minutes = () => {
+		const time = new Date(task.duration * 1000 || 0);
+		return time.getMinutes() + (time.getHours() - 1) * 60;
+	};
+
 	const checkHandler = (
 		e: Event & {
 			currentTarget: EventTarget & HTMLInputElement;
@@ -36,32 +34,7 @@
 		}
 	) => {
 		editable = false;
-		const taskId =
-			$store.nextSession.find((storeTask) => storeTask.id === task.id) ||
-			$store.currentSession.find((storeTask) => storeTask.id === task.id);
-		store.update((state): Tasks => {
-			return {
-				...state,
-				nextSession: state.nextSession.map((storeTask) => {
-					if (storeTask.id === taskId?.id) {
-						return {
-							...storeTask,
-							duration: parseInt(e.currentTarget.value || '0') * 60
-						};
-					}
-					return storeTask;
-				}),
-				currentSession: state.currentSession.map((storeTask) => {
-					if (storeTask.id === taskId?.id) {
-						return {
-							...storeTask,
-							duration: parseInt(e.currentTarget.value || '0') * 60
-						};
-					}
-					return storeTask;
-				})
-			};
-		});
+		updateTask(task.id, { ...task, duration: parseInt(e.currentTarget.value || '0') * 60 });
 	};
 </script>
 
@@ -78,10 +51,12 @@
 	</div>
 	{#if editable}
 		<div>
-			<input type="number" step="5" autofocus on:blur={blurHandler} value={minutes} />
+			<!-- svelte-ignore a11y-autofocus -->
+			<input type="number" step="5" autofocus on:blur={blurHandler} value={minutes()} />
 		</div>
 	{:else}
-		<span on:click={() => (editable = !editable)}>{`${minutes}m`}</span>
+		<!-- svelte-ignore a11y-click-events-have-key-events -->
+		<span on:click={() => (editable = !editable)}>{`${minutes()}m`}</span>
 	{/if}
 </div>
 

@@ -35,3 +35,9 @@ export const updateTask = (id: string, taskInput: Task) => {
 	);
 	store.set({ currentSession, nextSession });
 };
+
+export const addTask = (task: Task) => {
+	const tasks = get(store);
+	const nextSession = [...tasks.nextSession, task];
+	store.update((tasks) => ({ ...tasks, nextSession }));
+};
