@@ -1,14 +1,19 @@
 <script lang="ts">
+	import { identity } from 'svelte/internal';
 	import { updateTask, type Task, type Tasks } from './store';
 	import { taskStore } from './store';
 
 	export let task: Task;
 	let editable = false;
+	let editTask = false;
 
 	$: minutes = () => {
 		const time = new Date(task.duration * 1000 || 0);
 		return time.getMinutes() + (time.getHours() - 1) * 60;
 	};
+
+	// $: updateTask(task.id, task);
+	$: console.log($taskStore);
 
 	const checkHandler = (
 		e: Event & {
@@ -55,7 +60,20 @@
 			data-done={task.status}
 			on:change|preventDefault={checkHandler}
 		/>
-		<label for={task.id}>{task.title}</label>
+		{#if !editTask}
+			<label for={task.id} on:dblclick={() => (editTask = true)}>{task.title}</label>
+		{:else}
+			<!-- svelte-ignore a11y-autofocus -->
+			<input
+				type="text"
+				autofocus
+				bind:value={task.title}
+				on:blur={() => {
+					editTask = false;
+					updateTask(task.id, task);
+				}}
+			/>
+		{/if}
 	</div>
 	{#if editable}
 		<div>

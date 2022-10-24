@@ -12,7 +12,6 @@
 		addTask({
 			id: cuid(),
 			title: inputValue,
-			done: false,
 			duration: 25 * 60,
 			timeWorkedOn: 0,
 			status: 'backlog'
