@@ -23,6 +23,14 @@
 				default:
 					task.status = 'marked';
 			}
+		} else {
+			switch (task.status) {
+				case 'done':
+					task.status = 'inProgress';
+					break;
+				default:
+					task.status = 'backlog';
+			}
 		}
 		updateTask(task.id, task);
 	};
