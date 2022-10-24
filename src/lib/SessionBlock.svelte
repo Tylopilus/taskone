@@ -9,7 +9,7 @@
 	export let current = false;
 	const bgColor = current ? '--gray-7' : '--gray-8';
 
-	const buttonHandler = () => {
+	const moveToCurrentHandler = () => {
 		store.update((state: Tasks) => {
 			const newState = {
 				...state,
@@ -28,16 +28,28 @@
 			return newState;
 		});
 	};
+
+	const clearCurrentHandler = () => {
+		store.update((state: Tasks) => {
+			return {
+				...state,
+				currentSession: state.currentSession.filter((task) => !task.done)
+			};
+		});
+	};
 </script>
 
 <section style="--bgColor: var({bgColor})">
 	<div class="headline">
 		<span>{title}</span>
 		{#if current}
-			<span>0h 32m</span>
+			<div>
+				<button on:click={clearCurrentHandler}>clear</button>
+				<span>0h 32m</span>
+			</div>
 		{/if}
 		{#if !current}
-			<button on:click={buttonHandler}>move up ↑</button>
+			<button on:click={moveToCurrentHandler}>move up ↑</button>
 		{/if}
 	</div>
 	{#each tasks as task}
@@ -64,9 +76,15 @@
 	.headline {
 		width: 100%;
 		display: flex;
+		align-items: center;
 		justify-content: space-between;
 		padding-inline: var(--size-3);
 		color: var(--gray-1);
+	}
+	.headline > div {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
 	}
 	button {
 		background: unset;

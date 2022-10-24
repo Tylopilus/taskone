@@ -1,10 +1,17 @@
 <script lang="ts">
-	import type { Task } from './store';
+	import type { Task, Tasks } from './store';
 	import { store } from './store';
 	export let task: Task;
-	const time = new Date(task.duration * 1000);
-	const minutes = time.getMinutes() + (time.getHours() - 1) * 60;
-
+	// const time = new Date(task.duration * 1000);
+	$: time = new Date(
+		(
+			$store.nextSession.find((storeTask) => storeTask.id === task.id) ||
+			$store.currentSession.find((storeTask) => storeTask.id === task.id)
+		)?.duration! * 1000 || 0
+	);
+	$: minutes = time.getMinutes() + (time.getHours() - 1) * 60;
+	// const minutes = time.getMinutes() + (time.getHours() - 1) * 60;
+	let editable = false;
 	const checkHandler = (
 		e: Event & {
 			currentTarget: EventTarget & HTMLInputElement;
@@ -21,7 +28,40 @@
 		} else {
 			task.done = false;
 		}
-		console.log($store);
+	};
+
+	const blurHandler = (
+		e: FocusEvent & {
+			currentTarget: EventTarget & HTMLInputElement;
+		}
+	) => {
+		editable = false;
+		const taskId =
+			$store.nextSession.find((storeTask) => storeTask.id === task.id) ||
+			$store.currentSession.find((storeTask) => storeTask.id === task.id);
+		store.update((state): Tasks => {
+			return {
+				...state,
+				nextSession: state.nextSession.map((storeTask) => {
+					if (storeTask.id === taskId?.id) {
+						return {
+							...storeTask,
+							duration: parseInt(e.currentTarget.value || '0') * 60
+						};
+					}
+					return storeTask;
+				}),
+				currentSession: state.currentSession.map((storeTask) => {
+					if (storeTask.id === taskId?.id) {
+						return {
+							...storeTask,
+							duration: parseInt(e.currentTarget.value || '0') * 60
+						};
+					}
+					return storeTask;
+				})
+			};
+		});
 	};
 </script>
 
@@ -36,7 +76,13 @@
 		/>
 		<label for={task.id}>{task.title}</label>
 	</div>
-	<span>{`${minutes}m`}</span>
+	{#if editable}
+		<div>
+			<input type="number" step="5" autofocus on:blur={blurHandler} value={minutes} />
+		</div>
+	{:else}
+		<span on:click={() => (editable = !editable)}>{`${minutes}m`}</span>
+	{/if}
 </div>
 
 <style>
@@ -62,7 +108,7 @@
 		background-color: var(--gray-1);
 		border-radius: var(--radius-round);
 		font-size: var(--font-size-2);
-		line-height: var(--font-lineheight-3);
+		line-height: var(--font-lineheight-4);
 		padding-inline: var(--size-3);
 	}
 	input:checked + label {
